@@ -139,8 +139,12 @@ async def input_chain_single(dut, bit, ff_index):
     ######################
     # TODO: YOUR CODE HERE 
     ######################
-
-    pass
+    dut.scan_en = True
+    dut.scan_in = bit
+    for cycle in range(ff_index):
+        await step_clock(dut)
+    dut.scan_en = False
+    
     
 #-------------------------------------------------------------------
 
