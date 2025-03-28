@@ -7,7 +7,7 @@ from cocotb.triggers import Timer
 # to the filepath of the .log
 # file you are working with
 CHAIN_LENGTH = -1
-FILE_NAME    = ""
+FILE_NAME    = "/home/user/18_624/exercises/ex9-scanning-chains-shyacint/adder/adder.log"
 
 
 
@@ -135,61 +135,42 @@ async def step_clock(dut):
 #       the specified FF?
         
 async def input_chain_single(dut, bit, ff_index):
-
-    ######################
-    # TODO: YOUR CODE HERE 
-    ######################
     dut.scan_en = True
     dut.scan_in = bit
     for cycle in range(ff_index):
         await step_clock(dut)
     dut.scan_en = False
-    
-    
-#-------------------------------------------------------------------
-
-# This function places multiple bit values inside FFs of specified indexes.
-# This is an upgrade of input_chain_single() and should be accomplished
-#   for Part H of Task 1
-        
-# Hint: How many clocks would it take for value to reach
-#       the specified FF?
         
 async def input_chain(dut, bit_list, ff_index):
+    dut.scan_en = True
+    for bit in reversed(bit_list):
+        scan_in = bit
+        step_clock(dut)
+    dut.scan_en = False
 
-    ######################
-    # TODO: YOUR CODE HERE 
-    ######################
-
-    pass
-
-#-----------------------------------------------
-
-# This function retrieves a single bit value from the
-# chain at specified index 
+    # biases the idx so it is in the right FF
+    for cycle in range(ff_index):
+        step_clock(dut)
         
 async def output_chain_single(dut, ff_index):
-
-    ######################
-    # TODO: YOUR CODE HERE 
-    ######################
-
-    pass       
-
-#-----------------------------------------------
-
-# This function retrieves a single bit value from the
-# chain at specified index 
-# This is an upgrade of input_chain_single() and should be accomplished
-#   for Part H of Task 1
+    dut.scan_en = True
+    dut.scan_in = bit
+    for cycle in range(CHAIN_LENGTH - ff_index):
+        await step_clock(dut)
+    dut.scan_en = False
+    return dut.scan_out   
         
 async def output_chain(dut, ff_index, output_length):
+    ignore_cycles = CHAIN_LENGTH - (output_length + ff_index)
+    # clearing out the values we don't care about 
+    for _ in range(ignore_cycles):
+        step_clock(dut)
+    
+    scan_values = []
+    for _ in range(output_length):
+        scan_values.append(dut.scan_out)
 
-    ######################
-    # TODO: YOUR CODE HERE 
-    ######################
-
-    pass       
+    return scan_values.reverse()
 
 #-----------------------------------------------
 
