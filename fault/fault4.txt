@@ -1,0 +1,8 @@
+============== STARTING ATPG TEST ==============
+Errors detected on vector (1, 1, 1, 1)
+        Expected output =  1  but got  0
+        Potential faults:  ['S@0 a', 'S@0 b', 'S@0 d', 'S@0 xor']
+Errors detected on vector (1, 1, 0, 0)
+        Expected output =  1  but got  0
+        Potential faults:  ['S@0 not_c', 'S@1 c']
+============== ATPG TEST DONE ==============
